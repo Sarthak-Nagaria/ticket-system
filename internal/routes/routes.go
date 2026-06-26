@@ -15,19 +15,28 @@ func Setup(router *gin.Engine, db *gorm.DB, cfg *config.Config) {
 	authHandler := handlers.NewAuthHandler(db, cfg)
 	ticketHandler := handlers.NewTicketHandler(db)
 
-	// Public health check.
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	// Root endpoint
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Ticket System API is running",
+		})
 	})
 
-	// Public auth routes.
+	// Public health check
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"status": "ok",
+		})
+	})
+
+	// Public auth routes
 	auth := router.Group("/auth")
 	{
 		auth.POST("/register", authHandler.Register)
 		auth.POST("/login", authHandler.Login)
 	}
 
-	// Protected ticket routes - require a valid JWT.
+	// Protected ticket routes
 	tickets := router.Group("/tickets")
 	tickets.Use(middleware.AuthRequired(cfg.JWTSecret))
 	{
