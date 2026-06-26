@@ -1,0 +1,16 @@
+# Database
+*.db
+
+# Environment
+.env
+
+# Build files
+ticket-system
+*.exe
+
+# IDE
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
